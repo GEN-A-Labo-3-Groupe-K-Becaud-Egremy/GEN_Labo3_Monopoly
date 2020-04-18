@@ -1,51 +1,93 @@
 package ch.heig.gen.labo3;
 
-import java.util.List;
+import ch.heig.gen.labo3.die.Cup;
+import ch.heig.gen.labo3.square.Square;
 
 public class Player {
-    private String    name;
-    private Board     board;
-    private List<Die> dices;
-    private Piece     piece;
+    private final String name;
+    private final Board  board;
+    private final Cup    cup;
+    private final Piece  piece;
+    private int          money;
 
     /**
      * Constructor of player.
      * @param name Name of player
      * @param board Board where the piece is moved.
-     * @param dices List of dices to play with.
+     * @param cup Cup of dices to play with.
      */
-    public Player(String name, Board board, List<Die> dices) {
+    public Player(String name, Board board, Cup cup) {
         this.name  = name;
         this.board = board;
-        this.dices = dices;
+        this.cup   = cup;
         this.piece = new Piece(this.name + "'s piece", board.getSquare(0));
+        money      = 0;
+    }
+
+    /**
+     * Read and return player's sold.
+     * @return Sold of the player (only a readable indicator)
+     */
+    public int getNetWorth() {
+        return money;
+    }
+
+    /**
+     * Add cash in player's sold.
+     * @param amount Amount to add.
+     */
+    public void addCash(int amount) {
+        if (amount > 0) {
+            money += amount;
+        }
+    }
+
+    /**
+     * Reduce cash in player's sold.
+     * @param amount Amount to reduce.
+     */
+    public void reduceCash(int amount) {
+        if (amount > 0) {
+            money -= amount;
+        }
+    }
+
+    /**
+     * Get the location of player's piece.
+     * @return square location for player's piece.
+     */
+    public Square getLocation() {
+        return this.piece.getLocation();
+    }
+
+    /**
+     * Set the location of player's piece.
+     * @param square New square location for player's piece.
+     */
+    public void setLocation(Square square) {
+        this.piece.setLocation(square);
     }
 
     /**
      * Make the player take a turn.
      */
     public void takeTurn() {
-        int    dicesTotal = 0;
         Square oldLoc;
         Square newLoc;
 
-        System.out.print(name + " roll the dices [ " );
-
         // Get the total value of rolled dices
-        for (Die die : dices) {
-            die.roll();
-            dicesTotal += die.getFaceValue();
-            System.out.print(die.getFaceValue() + " ");
-        }
-        System.out.print("], ");
+        System.out.print(name + " roll the dices " );
+        cup.roll();
 
         // Get old/new squares locations
         oldLoc = piece.getLocation();
-        newLoc = board.getSquare(oldLoc, dicesTotal);
-        System.out.println("moving " + piece.getName() + " by " + dicesTotal + " square(s) from \'" + oldLoc.getName() +
-                "\' to \'" + newLoc.getName() + "\'");
+        newLoc = board.getSquare(oldLoc, cup.getTotal());
+        System.out.print(". Moving " + piece.getName() + " by " + cup.getTotal() + " square(s) from \'" + oldLoc.getName() +
+                "\' to \'" + newLoc.getName() + "\'. ");
 
         // Move piece
-        piece.setLocation(newLoc);
+        setLocation(newLoc);
+        newLoc.landedOn(this);
+        System.out.print('\n');
     }
 }

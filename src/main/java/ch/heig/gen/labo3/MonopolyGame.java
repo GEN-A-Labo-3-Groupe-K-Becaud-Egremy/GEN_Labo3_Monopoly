@@ -1,18 +1,22 @@
 package ch.heig.gen.labo3;
 
+import ch.heig.gen.labo3.die.Cup;
+import ch.heig.gen.labo3.die.Die;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class MonopolyGame {
-    private final static int MAX_PLAYER = 8;
-    private final static int MIN_PLAYER = 2;
-    private final int    NB_ROUND   = 20;
-    private final int    NB_DIE     = 2;
+    private final static int MAX_PLAYER     = 8;
+    private final static int MIN_PLAYER     = 2;
+    private final int        NB_ROUND       = 20;
+    private final int        NB_DIE         = 2;
+    private final int        MONEY_STARTING = 1500;
 
     private Board              board;
     private final List<Player> players;
-    private List<Die>          dices;
+    private Cup                cup;
 
     /**
      * Constructor of MonopolyGame.
@@ -28,13 +32,11 @@ public class MonopolyGame {
         }
         // Initialize MonopolyGame's attributes
         this.board = new Board();
-        this.dices = new ArrayList<>();
-        for (int i = 0; i < NB_DIE; i++) {
-            dices.add(new Die());
-        }
+        this.cup   = new Cup(NB_DIE);
         this.players = new ArrayList<>();
         for (int i = 0; i < nbPlayers; i++) {
-            players.add(new Player("J" + (i + 1), board, dices));
+            players.add(new Player("J" + (i + 1), board, cup));
+            players.get(i).addCash(MONEY_STARTING);
         }
     }
 
@@ -66,7 +68,7 @@ public class MonopolyGame {
      */
     public static void main(String[] args) {
         Random r = new Random();
-        MonopolyGame mGame = new MonopolyGame(r.nextInt(MAX_PLAYER - MIN_PLAYER) + MIN_PLAYER);
+        MonopolyGame mGame = new MonopolyGame(r.nextInt((MAX_PLAYER + 1) - MIN_PLAYER) + MIN_PLAYER);
         mGame.playGame();
     }
 }
