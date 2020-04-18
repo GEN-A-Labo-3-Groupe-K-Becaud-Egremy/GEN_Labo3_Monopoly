@@ -22,7 +22,7 @@ public class BoardTest {
 
     @Test
     public void shouldReturnTheExpectedSquareWithOffsetUse() {
-        assertEquals("Square 10",
+        assertEquals("Jail",
                 board.getSquare(
                         board.getSquare(5), 5).getName());
     }

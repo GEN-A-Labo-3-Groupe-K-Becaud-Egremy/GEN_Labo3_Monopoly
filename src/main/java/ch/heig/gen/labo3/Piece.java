@@ -1,8 +1,10 @@
 package ch.heig.gen.labo3;
 
+import ch.heig.gen.labo3.square.Square;
+
 public class Piece {
     private final String name;
-    private Square location;
+    private Square       location;
 
     /**
      * Constructor of Piece.

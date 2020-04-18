@@ -1,10 +1,15 @@
 package ch.heig.gen.labo3;
 
+import ch.heig.gen.labo3.square.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private final int NB_SQUARE = 40;
+    private final int NB_SQUARE             = 40;
+    private final int INCOME_TAX_SQUARE_POS = 4;
+    private final int JAIL_SQUARE_POS       = 10;
+    private final int GO_TO_JAIL_SQUARE_POS = 30;
 
     private final List<Square> squares;
 
@@ -13,9 +18,23 @@ public class Board {
      */
     public Board() {
         squares = new ArrayList<>();
-        squares.add(new Square("GO"));
+        squares.add(new GoSquare());
         for (int i = 1; i < NB_SQUARE; i++) {
-            squares.add(new Square("Square " + i));
+            switch (i) {
+                case INCOME_TAX_SQUARE_POS:
+                    squares.add(new IncomeTaxSquare());
+                    break;
+                case JAIL_SQUARE_POS:
+                    squares.add(new JailSquare());
+                    break;
+                case GO_TO_JAIL_SQUARE_POS:
+                    squares.add(new GoToJailSquare(squares.get(JAIL_SQUARE_POS)));
+                    break;
+                default:
+                    squares.add(new RegularSquare("Square " + i));
+                    break;
+            }
+
         }
     }
 
